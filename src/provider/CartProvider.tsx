@@ -28,7 +28,7 @@ const CartProvider = ({ children }: PropsWithChildren) => {
       updateQuantity(existingItem.id, 1);
     } else {
       const newCartItem: CartItem = {
-        id: randomUUID,
+        id: randomUUID.toString(),
         product_id: product.id,
         product: product,
         size: size,

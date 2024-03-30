@@ -31,5 +31,9 @@
     "experiments": {
       "typedRoutes": true
     }
+  },
+  "android": {
+    "package": "com.yourcompany.FoodOrdering",
+    "versionCode": 1
   }
 }

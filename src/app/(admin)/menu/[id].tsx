@@ -21,11 +21,6 @@ const productDetailScreen = () => {
     return <Text>Product not found</Text>;
   }
 
-  const addToCart = () => {
-    addItem(product, selectedSize);
-    router.push("/cart");
-  };
-
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
@@ -35,31 +30,9 @@ const productDetailScreen = () => {
       />
 
       <Text>Select size</Text>
-      <View style={styles.sizes}>
-        {size.map((s) => (
-          <Pressable
-            onPress={() => setSelectedSize(s)}
-            key={s}
-            style={[
-              styles.size,
-              {
-                backgroundColor: selectedSize === s ? "gainsboro" : "white",
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.sizeText,
-                { color: selectedSize ? "gray" : "white" },
-              ]}
-            >
-              {s}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
+      <Text style={styles.title}>{product.name}</Text>
       <Text style={styles.price}>{product.price}</Text>
-      <Button onPress={addToCart} text="Add to cart" />
+      {/* <Button onPress={addToCart} text="Add to cart" /> */}
     </View>
   );
 };
@@ -77,21 +50,9 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 18,
     fontWeight: "bold",
-    marginTop: "auto",
   },
-  sizes: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    marginVertical: 10,
+  title: {
+    fontSize: 20,
   },
-  size: {
-    backgroundColor: "gainsboro",
-    width: 50,
-    aspectRatio: 1,
-    borderRadius: 25,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  sizeText: { fontSize: 20, fontWeight: "500" },
 });
 export default productDetailScreen;
