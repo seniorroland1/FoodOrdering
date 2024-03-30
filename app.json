@@ -20,7 +20,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.yourcompany.FoodOrdering",
+      "versionCode": 1
     },
     "web": {
       "bundler": "metro",
@@ -31,9 +33,5 @@
     "experiments": {
       "typedRoutes": true
     }
-  },
-  "android": {
-    "package": "com.yourcompany.FoodOrdering",
-    "versionCode": 1
   }
 }
