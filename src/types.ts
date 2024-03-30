@@ -4,3 +4,13 @@ export type Product = {
   image: string | null;
   price: number;
 };
+
+export type PizzaSize = "S" | "M" | "L" | "XL";
+
+export type CartItem = {
+  id:string
+  product_id: number;
+  product: Product;
+  size: PizzaSize;
+  quantity: number;
+};
