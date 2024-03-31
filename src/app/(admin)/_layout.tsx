@@ -22,13 +22,13 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors.light.background,
-        tabBarInactiveTintColor:'gainboro',
+        tabBarInactiveTintColor: "gainboro",
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-        tabBarStyle:{
-          backgroundColor:Colors.light.tint
-        }
+        tabBarStyle: {
+          backgroundColor: Colors.light.tint,
+        },
       }}
     >
       <Tabs.Screen name="index" options={{ href: null }} />
@@ -43,9 +43,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Orders"
+        name="orders"
         options={{
-          title: "Tab Two",
+          title: "Orders",
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
         }}
       />
