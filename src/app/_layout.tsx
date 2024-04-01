@@ -11,6 +11,8 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "../components/useColorScheme";
 import CartProvider from "../provider/CartProvider";
+import { useQuery,QueryClient } from "react-query";
+
 
 export {
   // Catch any errors thrown by the Layout component.

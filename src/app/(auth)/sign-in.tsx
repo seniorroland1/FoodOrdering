@@ -1,17 +1,19 @@
 import Button from "@/src/components/Button";
 import Colors from "@/src/constants/Colors";
+import { supabase } from "@/src/lib/supabase";
 import { Link, Redirect } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
 const LoginPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const validateInput = () => {
     setError("");
-    if (!username) {
-      setError("Name is required");
+    if (!email) {
+      setError("Email is required");
       return false;
     }
     if (!password) {
@@ -21,17 +23,24 @@ const LoginPage = () => {
     return true;
   };
 
-  const login = () => {
-    validateInput();
-    return <Redirect href={"/(user)/menu/"} />;
+  const signInWithPassword = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      Alert.alert(error.message);
+    }
+    setLoading(false);
   };
   return (
     <View style={styles.container}>
       <Text style={styles.label}>username</Text>
       <TextInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Username"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Email"
         style={styles.input}
       />
 
@@ -45,7 +54,12 @@ const LoginPage = () => {
       />
 
       <Text style={[{ color: "red" }]}>{error}</Text>
-      <Button onPress={login} text="Login" style={styles.textButton} />
+      <Button
+        disabled={loading}
+        onPress={signInWithPassword}
+        text={loading ? "Signing In" : "Sign In"}
+        style={styles.textButton}
+      />
       <Link href="/sign-up">Sign-up</Link>
     </View>
   );

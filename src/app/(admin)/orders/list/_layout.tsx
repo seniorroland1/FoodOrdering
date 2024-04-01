@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 // install materialtoptab navigator
 
-const TopTabs = withLayoutContext(createMaterialTopTabNavigator);
+const TopTabs = withLayoutContext(createMaterialTopTabNavigator().Navigator);
 export default function OrderListNavigator() {
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: "white" }}>

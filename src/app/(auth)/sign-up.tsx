@@ -2,16 +2,19 @@ import Button from "@/src/components/Button";
 import Colors from "@/src/constants/Colors";
 import { Link, Redirect } from "expo-router";
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, Alert } from "react-native";
+import { supabase } from "@/src/lib/supabase";
+
 const RegisterPage = () => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string>();
+  const [loading, setLoading] = useState(false);
 
   const validateInput = () => {
     setError("");
-    if (!username) {
-      setError("Name is required");
+    if (!email) {
+      setError("Email is required");
       return false;
     }
     if (!password) {
@@ -21,17 +24,24 @@ const RegisterPage = () => {
     return true;
   };
 
-  const register = () => {
-    validateInput();
-    return <Redirect href={"/(user)/menu/"} />;
+  const signUpWithEmail = async () => {
+    setLoading(true);
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+    if (error) {
+      Alert.alert(error.message);
+    }
+    setLoading(false);
   };
   return (
     <View style={styles.container}>
       <Text style={styles.label}>username</Text>
       <TextInput
-        value={username}
-        onChangeText={setUsername}
-        placeholder="Username"
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Email"
         style={styles.input}
       />
 
@@ -45,7 +55,12 @@ const RegisterPage = () => {
       />
 
       <Text style={[{ color: "red" }]}>{error}</Text>
-      <Button onPress={register} text="Login" style={styles.textButton} />
+      <Button
+        onPress={signUpWithEmail}
+        text={loading ? "Signing Up..." : "Sign Up"}
+        style={styles.textButton}
+        disabled={loading}
+      />
       <Link href="/sign-in">Sign-in</Link>
     </View>
   );
