@@ -9,7 +9,7 @@ export default function OrderListNavigator() {
   return (
     <SafeAreaView edges={["top"]} style={{ flex: 1, backgroundColor: "white" }}>
       <TopTabs>
-        <TopTabs.Screen name="indec=x" options={{ title: "Active" }} />
+        <TopTabs.Screen name="index" options={{ title: "Active" }} />
       </TopTabs>
     </SafeAreaView>
   );
