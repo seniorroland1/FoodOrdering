@@ -19,6 +19,8 @@ import {
   useDeleteProduct,
   useUpdateProduct,
 } from "@/src/api/ProductApi";
+import { randomUUID } from "expo-crypto";
+import { supabase } from "@/src/lib/supabase";
 
 const CreateProductScreen = () => {
   const router = useRouter();
@@ -75,15 +77,17 @@ const CreateProductScreen = () => {
     return <ActivityIndicator />;
   }
 
-  const onUpdate = () => {
-    updateProduct({ name, price: parseFloat(price), image });
+  const onUpdate = async () => {
+    const imagePath = await uploadImage();
+    updateProduct({ name, price: parseFloat(price), image: imagePath });
   };
 
-  const onCreate = () => {
+  const onCreate = async () => {
+    const imagePath = await uploadImage();
     createProduct({
       name,
       price: parseFloat(price),
-      image,
+      image: imagePath,
     });
   };
 
@@ -135,6 +139,26 @@ const CreateProductScreen = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+    }
+  };
+  // install expo-file-system base64-arraybuffer
+  // import * as FileSystem from 'expo-file-system'
+
+  const uploadImage = async () => {
+    if (!image?.startsWith("file://")) {
+      return;
+    }
+    const base64 = await FileSystem.readAsStringAsync(image, {
+      encoding: "base64",
+    });
+    const filePath = `${randomUUID()}.png`;
+    const contentType = "image/png";
+    const { data, error } = await supabase.storage
+      .from("product-image")
+      .upload(filePath, decode(base64), { contentType });
+
+    if (data) {
+      return data.path;
     }
   };
 

@@ -13,6 +13,7 @@ import { PizzaSize } from "@/src/types";
 import { FontAwesome } from "@expo/vector-icons";
 import Colors from "@/src/constants/Colors";
 import { useFetchSingleProduct } from "@/src/api/ProductApi";
+import RemoteImage from "@/src/components/RemoteImage";
 
 const size: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -22,7 +23,7 @@ const productDetailScreen = () => {
   const { id: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
   const { data: product, isLoading } = useFetchSingleProduct(id);
-  
+
   if (isLoading) {
     return <ActivityIndicator />;
   }
@@ -53,9 +54,10 @@ const productDetailScreen = () => {
       />
 
       <Stack.Screen options={{ title: product.name }} />
-      <Image
+      <RemoteImage
         style={styles.image}
-        source={{ uri: product.image || defaultProductImage }}
+        path={product?.image}
+        fallback={defaultProductImage}
       />
 
       <Text>Select size</Text>

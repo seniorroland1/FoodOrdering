@@ -2,6 +2,7 @@ import { Image, Text, View, StyleSheet, FlatList } from "react-native";
 import { defaultProductImage } from "@/src/components/ProductListItem";
 import Colors from "@/src/constants/Colors";
 import { CartItem } from "../types";
+import RemoteImage from "./RemoteImage";
 
 type Props = {
   item: CartItem;
@@ -9,11 +10,13 @@ type Props = {
 const OrderItemListItem = ({ item }: Props) => {
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: item.product.image || defaultProductImage }}
+      <RemoteImage
         style={styles.image}
+        path={item.product.image}
+        fallback={defaultProductImage}
         resizeMode="contain"
       />
+
       <View style={styles.infoContainer}>
         <View style={styles.info}>
           <Text>{item.product.name}</Text>

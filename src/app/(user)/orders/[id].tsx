@@ -9,12 +9,14 @@ import {
 import Colors from "@/src/constants/Colors";
 import OrderItemListItem from "@/src/components/OrderItemListItem";
 import { useGetMySingleOrder } from "@/src/api/OrdersApi";
+import { useUpdateOrderListener } from "@/src/api/Subcriptions";
 
 const OrderDetailScreen = () => {
   const { id: idString } = useLocalSearchParams();
   const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
 
   const { order, isLoading: isMyOrdersLoading } = useGetMySingleOrder(id);
+  useUpdateOrderListener(id);
 
   if (isMyOrdersLoading) {
     return <ActivityIndicator />;

@@ -14,6 +14,7 @@ import { useCart } from "@/src/provider/CartProvider";
 import { PizzaSize } from "@/src/types";
 import { useFetchSingleProduct } from "@/src/api/ProductApi";
 import { useAuth } from "@/src/provider/AuthProvider";
+import RemoteImage from "@/src/components/RemoteImage";
 
 const size: PizzaSize[] = ["S", "M", "L", "XL"];
 
@@ -47,9 +48,10 @@ const productDetailScreen = () => {
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
-      <Image
+      <RemoteImage
         style={styles.image}
-        source={{ uri: product.image || defaultProductImage }}
+        path={product?.image}
+        fallback={defaultProductImage}
       />
 
       <Text>Select size</Text>
