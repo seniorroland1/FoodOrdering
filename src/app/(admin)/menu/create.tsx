@@ -2,18 +2,51 @@ import Button from "@/src/components/Button";
 import { defaultProductImage } from "@/src/components/ProductListItem";
 import Colors from "@/src/constants/Colors";
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import { useLocalSearchParams } from "expo-router";
+import {
+  useCreateProduct,
+  useDeleteProduct,
+  useUpdateProduct,
+} from "@/src/api/ProductApi";
 
 const CreateProductScreen = () => {
-  const [name, setName] = useState<string>();
-  const [price, setPrice] = useState<string>();
-  const [error, setError] = useState<string>();
-  const [image, setImage] = useState<string | null>(null);
+  const router = useRouter();
 
-  const { id } = useLocalSearchParams();
+  const [name, setName] = useState<string>();
+  const [price, setPrice] = useState("");
+  const [error, setError] = useState("");
+  const [image, setImage] = useState(null);
+
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const {
+    createProduct,
+    isLoading: isCreateProductLoading,
+    isSuccess: isCreatingSuccess,
+  } = useCreateProduct();
+  const {
+    updateProduct,
+    isLoading: isUpdateProductLoading,
+    isSuccess: isUpdateSuccess,
+  } = useUpdateProduct(id);
+  const {
+    deleteProduct,
+    isLoading: isDeleteProductLoading,
+    isSuccess: isDeleteSuccess,
+  } = useDeleteProduct(id);
+
   const isUpdating = !!id;
 
   const validateInput = () => {
@@ -34,10 +67,24 @@ const CreateProductScreen = () => {
     return true;
   };
 
-  const onUpdate = () => {};
+  if (
+    isCreateProductLoading ||
+    isUpdateProductLoading ||
+    isDeleteProductLoading
+  ) {
+    return <ActivityIndicator />;
+  }
+
+  const onUpdate = () => {
+    updateProduct({ name, price: parseFloat(price), image });
+  };
 
   const onCreate = () => {
-    resetFields();
+    createProduct({
+      name,
+      price: parseFloat(price),
+      image,
+    });
   };
 
   const resetFields = () => {
@@ -57,8 +104,10 @@ const CreateProductScreen = () => {
   };
 
   const onDelete = () => {
-    console.warn("Deleting product");
+    deleteProduct();
+    router.back();
   };
+
   const deleteProduct = () => {
     Alert.alert("Confirm", "Are you sure you want to delete this product ?", [
       {
@@ -71,6 +120,10 @@ const CreateProductScreen = () => {
       },
     ]);
   };
+
+  if (isCreatingSuccess | isUpdateSuccess | isDeleteSuccess) {
+    resetFields();
+  }
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

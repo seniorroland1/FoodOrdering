@@ -1,17 +1,25 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Text, View, StyleSheet, FlatList, Pressable } from "react-native";
-import orders from "@/assets/data/orders";
 import Colors from "@/src/constants/Colors";
 import OrderItemListItem from "@/src/components/OrderItemListItem";
 import { OrderStatusList } from "@/src/types";
+import { useGetMySingleOrder, useUpdateOrder } from "@/src/api/OrdersApi";
+import { useState } from "react";
 
 const OrderDetailScreen = () => {
-  const { id } = useLocalSearchParams();
-  const order = orders.find((order) => order.id.toString() === id);
-  if (!order) {
-    return;
-  }
-  const handlePress = () => {};
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const [statusText, setStatusText] = useState("");
+  const { order } = useGetMySingleOrder(id);
+  const { updateOrder, isLoading: isUpdatingOrderLoading } = useUpdateOrder(
+    id,
+    order
+  );
+  const handlePress = () => {
+    updateOrder(statusText);
+    setStatusText(statusText);
+  };
 
   return (
     <View style={styles.container}>
@@ -30,6 +38,7 @@ const OrderDetailScreen = () => {
               {OrderStatusList.map((status) => (
                 <Pressable
                   key={status}
+                  disabled={isUpdatingOrderLoading}
                   onPress={handlePress}
                   style={{
                     borderColor: Colors.light.tint,
@@ -38,14 +47,12 @@ const OrderDetailScreen = () => {
                     borderRadius: 5,
                     marginVertical: 10,
                     backgroundColor:
-                      order.status === status
-                        ? Colors.light.tint
-                        : "transparent",
+                      statusText === status ? Colors.light.tint : "transparent",
                   }}
                 >
                   <Text
                     style={{
-                      color: order.status ? "white" : Colors.light.tint,
+                      color: statusText ? "white" : Colors.light.tint,
                     }}
                   >
                     {status}

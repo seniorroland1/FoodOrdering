@@ -27,7 +27,12 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState(null);
 
-  const contextData = { session, loading, isAdmin: profile?.group === "admin" };
+  const contextData = {
+    session,
+    loading,
+    isAdmin: profile?.group === "admin",
+    profile,
+  };
 
   useEffect(() => {
     const fetchSession = async () => {

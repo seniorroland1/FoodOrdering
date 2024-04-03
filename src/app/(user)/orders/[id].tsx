@@ -1,14 +1,24 @@
 import { Stack, useLocalSearchParams } from "expo-router";
-import { Image, Text, View, StyleSheet, FlatList } from "react-native";
-import orders from "@/assets/data/orders";
-import { defaultProductImage } from "@/src/components/ProductListItem";
+import {
+  Text,
+  View,
+  StyleSheet,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import Colors from "@/src/constants/Colors";
-import OrderListItem from "@/src/components/orderListItem";
 import OrderItemListItem from "@/src/components/OrderItemListItem";
+import { useGetMySingleOrder } from "@/src/api/OrdersApi";
 
 const OrderDetailScreen = () => {
-  const { id } = useLocalSearchParams();
-  const order = orders.find((order) => order.id.toString() === id);
+  const { id: idString } = useLocalSearchParams();
+  const id = parseFloat(typeof idString === "string" ? idString : idString[0]);
+
+  const { order, isLoading: isMyOrdersLoading } = useGetMySingleOrder(id);
+
+  if (isMyOrdersLoading) {
+    return <ActivityIndicator />;
+  }
 
   if (!order) {
     return;

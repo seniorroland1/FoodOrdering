@@ -11,7 +11,7 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "../components/useColorScheme";
 import CartProvider from "../provider/CartProvider";
-import { useQuery, QueryClient } from "react-query";
+import { QueryClientProvider, QueryClient } from "react-query";
 import AuthProvider from "../provider/AuthProvider";
 
 export {
@@ -53,18 +53,27 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const client = new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
+    },
+  });
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <AuthProvider>
-        <CartProvider>
-          <Stack>
-            <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-            <Stack.Screen name="(user)" options={{ headerShown: false }} />
-            <Stack.Screen name="(auth)" options={{ headerShown: false }} />
-            <Stack.Screen name="cart" options={{ presentation: "modal" }} />
-          </Stack>
-        </CartProvider>
+        <QueryClientProvider client={client}>
+          <CartProvider>
+            <Stack>
+              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+              <Stack.Screen name="(user)" options={{ headerShown: false }} />
+              <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+              <Stack.Screen name="cart" options={{ presentation: "modal" }} />
+            </Stack>
+          </CartProvider>
+        </QueryClientProvider>
       </AuthProvider>
     </ThemeProvider>
   );
